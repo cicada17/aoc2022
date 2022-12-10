@@ -3,10 +3,9 @@ def parse(stack_lines):
     stack_lines.reverse()
     transposed = [''.join(t) for t in zip(*stack_lines)]
     for stack_line in transposed:
-        if not stack_line[0].isnumeric():
-            continue
         stack = [c for c in stack_line if c.isalpha()]
-        stacks.append(stack)
+        if stack:
+            stacks.append(stack)
     return stacks
 
 # part 1
@@ -15,26 +14,16 @@ read_stack = True
 stack_lines = []
 stacks = []
 with open('input/d5', 'r') as f:
-    for rawline in f:
-        line = rawline.rstrip('\n')
-        # read stack
-        if read_stack:
-            if len(line) > 0:
-                stack_lines.append(line)
-            else:
-                read_stack = False
-                stacks = parse(stack_lines)
-                print(stacks)
-        # read movement
-        else:
-            if len(line) == 0:
-                continue
-            num_and_space = ''.join(c for c in line if c.isdigit() or c == ' ')
-            num_to_move, source, dest = [int(s) for s in num_and_space.split()]
-            source -= 1
-            dest -= 1
-            for i in range(num_to_move):
-                stacks[dest].append(stacks[source].pop())
+    raw = f.read().rstrip()
+    stack_input, movement_input = raw.split('\n\n')
+    stacks = parse(list(stack_input.split('\n')))
+    for line in movement_input.split('\n'):
+        num_and_space = ''.join(c for c in line if c.isdigit() or c == ' ')
+        num_to_move, source, dest = [int(s) for s in num_and_space.split()]
+        source -= 1
+        dest -= 1
+        for i in range(num_to_move):
+            stacks[dest].append(stacks[source].pop())
 
 for stack in stacks:
     if len(stack) == 0:
@@ -49,29 +38,17 @@ read_stack = True
 stack_lines = []
 stacks = []
 with open('input/d5', 'r') as f:
-    for rawline in f:
-        line = rawline.rstrip('\n')
-        # read stack
-        if read_stack:
-            if len(line) > 0:
-                stack_lines.append(line)
-            else:
-                read_stack = False
-                stacks = parse(stack_lines)
-                print(stacks)
-        # read movement
-        else:
-            if len(line) == 0:
-                continue
-            num_and_space = ''.join(c for c in line if c.isdigit() or c == ' ')
-            num_to_move, source, dest = [int(s) for s in num_and_space.split()]
-            source -= 1
-            dest -= 1
-            temp = []
-            for i in range(num_to_move):
-                temp.append(stacks[source].pop())
-            temp.reverse()
-            stacks[dest] += temp
+    raw = f.read().rstrip()
+    stack_input, movement_input = raw.split('\n\n')
+    stacks = parse(list(stack_input.split('\n')))
+    for line in movement_input.split('\n'):
+        num_and_space = ''.join(c for c in line if c.isdigit() or c == ' ')
+        num_to_move, source, dest = [int(s) for s in num_and_space.split()]
+        source -= 1
+        dest -= 1
+        temp = [stacks[source].pop() for i in range(num_to_move)]
+        temp.reverse()
+        stacks[dest] += temp
 
 for stack in stacks:
     if len(stack) == 0:
