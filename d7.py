@@ -22,9 +22,12 @@ for raw in raws:
             current = root
         elif 'cd' in line:
             name = line.split()[-1]
-            child = Folder()
-            current.children[name] = child
-            child.parent = current
+            if name in current.children:
+                child = current.children[name]
+            else:
+                child = Folder()
+                current.children[name] = child
+                child.parent = current
             current = child
     # ls
     else:
