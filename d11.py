@@ -45,8 +45,7 @@ print()
 for _ in range(20):
     for i, monkey in enumerate(monkeys):
         inspect[i] += len(monkey.items)
-        while monkey.items:
-            item = monkey.items.pop()
+        for item in monkey.items:
             # Inspect
             if monkey.op == '+':
                 item += monkey.op_value
@@ -63,6 +62,7 @@ for _ in range(20):
                 monkeys[monkey.next_true].items.append(item)
             else:
                 monkeys[monkey.next_false].items.append(item)
+        monkey.items.clear()
     for monkey in monkeys:
         print(monkey.items)
     print()
